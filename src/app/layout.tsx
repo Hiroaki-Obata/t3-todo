@@ -1,12 +1,9 @@
 import '@/styles/globals.css';
-
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
-
 import { TRPCReactProvider } from '@/trpc/react';
+import dynamic from 'next/dynamic';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Header } from '@/components/custom/header';
 import { Sidebar } from '@/components/custom/sidebar';
 
@@ -15,6 +12,14 @@ export const metadata: Metadata = {
   description: 'A simple todo app built with T3',
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
+
+const ReactQueryDevtools = dynamic(
+  () =>
+    import('@tanstack/react-query-devtools').then(
+      (mod) => mod.ReactQueryDevtools
+    ),
+  { ssr: false }
+);
 
 export default function RootLayout({
   children,
@@ -28,6 +33,9 @@ export default function RootLayout({
             <Sidebar />
             <main className="flex-1 p-4 overflow-y-auto">{children}</main>
           </div>
+          {process.env.NODE_ENV === 'development' && (
+            <ReactQueryDevtools initialIsOpen={false} />
+          )}
         </TRPCReactProvider>
       </body>
     </html>
