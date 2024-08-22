@@ -1,14 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-
 import { api } from '@/trpc/react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 export function LatestPost() {
+  // 最新の投稿を取得
+  // データ取得中はローディング状態を表示
   const [latestPost] = api.post.getLatest.useSuspenseQuery();
 
+  const [posts] = api.post.getAll.useSuspenseQuery();
+
+  // tRPCのユーティリティ関数を取得
   const utils = api.useUtils();
+
   const [name, setName] = useState('');
+
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
@@ -17,7 +31,7 @@ export function LatestPost() {
   });
 
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-full">
       {latestPost ? (
         <p className="truncate">Your most recent post: {latestPost.name}</p>
       ) : (
@@ -44,6 +58,27 @@ export function LatestPost() {
         >
           {createPost.isPending ? 'Submitting...' : 'Submit'}
         </button>
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>内容</TableHead>
+              <TableHead>作成者</TableHead>
+              <TableHead>作成日時</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {posts.map((post) => (
+              <TableRow key={post.id}>
+                <TableCell>{post.name}</TableCell>
+                <TableCell>{post.createdById.name}</TableCell>
+                <TableCell>
+                  {new Date(post.createdAt).toLocaleString('ja-JP')}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </form>
     </div>
   );
