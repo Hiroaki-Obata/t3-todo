@@ -1,11 +1,11 @@
 {
-  "id": "cd2e7dbf-5210-45a8-a948-056d66439aeb",
+  "id": "a257fc26-79b9-4860-8d6b-5915814632dd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.t3-todo_account": {
-      "name": "t3-todo_account",
+    "public.account": {
+      "name": "account",
       "schema": "",
       "columns": {
         "user_id": {
@@ -93,10 +93,10 @@
         }
       },
       "foreignKeys": {
-        "t3-todo_account_user_id_t3-todo_user_id_fk": {
-          "name": "t3-todo_account_user_id_t3-todo_user_id_fk",
-          "tableFrom": "t3-todo_account",
-          "tableTo": "t3-todo_user",
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
@@ -108,8 +108,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "t3-todo_account_provider_provider_account_id_pk": {
-          "name": "t3-todo_account_provider_provider_account_id_pk",
+        "account_provider_provider_account_id_pk": {
+          "name": "account_provider_provider_account_id_pk",
           "columns": [
             "provider",
             "provider_account_id"
@@ -118,8 +118,8 @@
       },
       "uniqueConstraints": {}
     },
-    "public.t3-todo_post": {
-      "name": "t3-todo_post",
+    "public.post": {
+      "name": "post",
       "schema": "",
       "columns": {
         "id": {
@@ -187,10 +187,10 @@
         }
       },
       "foreignKeys": {
-        "t3-todo_post_created_by_t3-todo_user_id_fk": {
-          "name": "t3-todo_post_created_by_t3-todo_user_id_fk",
-          "tableFrom": "t3-todo_post",
-          "tableTo": "t3-todo_user",
+        "post_created_by_user_id_fk": {
+          "name": "post_created_by_user_id_fk",
+          "tableFrom": "post",
+          "tableTo": "user",
           "columnsFrom": [
             "created_by"
           ],
@@ -204,8 +204,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.t3-todo_session": {
-      "name": "t3-todo_session",
+    "public.session": {
+      "name": "session",
       "schema": "",
       "columns": {
         "session_token": {
@@ -245,10 +245,10 @@
         }
       },
       "foreignKeys": {
-        "t3-todo_session_user_id_t3-todo_user_id_fk": {
-          "name": "t3-todo_session_user_id_t3-todo_user_id_fk",
-          "tableFrom": "t3-todo_session",
-          "tableTo": "t3-todo_user",
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
@@ -262,8 +262,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.t3-todo_user": {
-      "name": "t3-todo_user",
+    "public.user": {
+      "name": "user",
       "schema": "",
       "columns": {
         "id": {
@@ -303,8 +303,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.t3-todo_verification_token": {
-      "name": "t3-todo_verification_token",
+    "public.verification_token": {
+      "name": "verification_token",
       "schema": "",
       "columns": {
         "identifier": {
@@ -329,8 +329,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "t3-todo_verification_token_identifier_token_pk": {
-          "name": "t3-todo_verification_token_identifier_token_pk",
+        "verification_token_identifier_token_pk": {
+          "name": "verification_token_identifier_token_pk",
           "columns": [
             "identifier",
             "token"
