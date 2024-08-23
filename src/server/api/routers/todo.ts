@@ -35,6 +35,7 @@ export const todoRouter = createTRPCRouter({
           },
         },
       },
+      orderBy: (todos, { desc }) => [desc(todos.createdAt)],
     });
 
     return todos;

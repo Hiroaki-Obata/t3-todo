@@ -14,12 +14,11 @@ import {
 import { api } from '@/trpc/react';
 
 export function Todos() {
-  const [todos] = api.todo.getAll.useSuspenseQuery();
-
-  // tRPCのユーティリティ関数を取得
   const utils = api.useUtils();
-
+  const [todos, setTodos] = useState(() => utils.todo.getAll.getData() ?? []);
   const [name, setName] = useState('');
+
+  void api.todo.getAll.useSuspenseQuery();
 
   const createTodo = api.todo.create.useMutation({
     onSuccess: async () => {
@@ -29,7 +28,19 @@ export function Todos() {
   });
 
   const updateTodo = api.todo.update.useMutation({
-    onSuccess: async () => {
+    // 楽観的更新 stateを更新して表示上は即時反映してから、APIを叩く
+    onMutate: async ({ id, completed }) => {
+      await utils.todo.getAll.cancel();
+      const prevTodos = utils.todo.getAll.getData();
+      setTodos((old) =>
+        old.map((t) => (t.id === id ? { ...t, completed } : t))
+      );
+      return { prevTodos };
+    },
+    onError: (err, newTodo, context) => {
+      setTodos(context?.prevTodos ?? []);
+    },
+    onSettled: async () => {
       await utils.todo.invalidate();
     },
   });
