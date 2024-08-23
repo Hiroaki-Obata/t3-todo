@@ -5,17 +5,24 @@ import {
   serial,
   timestamp,
   varchar,
-  boolean,
+  pgEnum,
 } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
+
+export const todoStatusEnum = pgEnum('status', [
+  '未着手',
+  '進行中',
+  '保留',
+  '完了',
+]);
 
 export const todos = pgTable(
   'todo',
   {
     id: serial('id').primaryKey(),
     title: varchar('title', { length: 256 }),
-    completed: boolean('completed').default(false),
+    status: todoStatusEnum('status').notNull(),
     createdById: varchar('created_by', { length: 255 })
       .notNull()
       .references(() => users.id),

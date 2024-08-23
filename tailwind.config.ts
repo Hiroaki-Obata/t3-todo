@@ -1,5 +1,6 @@
-import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
+
+import type { Config } from 'tailwindcss';
 
 const config = {
   darkMode: ['class'],
@@ -13,7 +14,7 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: '1rem',
       screens: {
         '2xl': '1400px',
       },

@@ -1,5 +1,5 @@
 {
-  "id": "a257fc26-79b9-4860-8d6b-5915814632dd",
+  "id": "96f333e8-da52-4f10-9c42-7b13f1af374f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -118,8 +118,8 @@
       },
       "uniqueConstraints": {}
     },
-    "public.post": {
-      "name": "post",
+    "public.todo": {
+      "name": "todo",
       "schema": "",
       "columns": {
         "id": {
@@ -128,11 +128,18 @@
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "title": {
+          "name": "title",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
         },
         "created_by": {
           "name": "created_by",
@@ -170,11 +177,11 @@
           "method": "btree",
           "with": {}
         },
-        "name_idx": {
-          "name": "name_idx",
+        "title_idx": {
+          "name": "title_idx",
           "columns": [
             {
-              "expression": "name",
+              "expression": "title",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -187,9 +194,9 @@
         }
       },
       "foreignKeys": {
-        "post_created_by_user_id_fk": {
-          "name": "post_created_by_user_id_fk",
-          "tableFrom": "post",
+        "todo_created_by_user_id_fk": {
+          "name": "todo_created_by_user_id_fk",
+          "tableFrom": "todo",
           "tableTo": "user",
           "columnsFrom": [
             "created_by"
@@ -201,6 +208,47 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -262,47 +310,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.user": {
-      "name": "user",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email_verified": {
-          "name": "email_verified",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "image": {
-          "name": "image",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.verification_token": {
       "name": "verification_token",
       "schema": "",
@@ -340,7 +347,18 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
+  "enums": {
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "未着手",
+        "進行中",
+        "保留",
+        "完了"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "_meta": {

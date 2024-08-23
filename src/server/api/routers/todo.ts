@@ -6,7 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import { todos } from '@/server/db/schema';
+import { todos, todoStatusEnum } from '@/server/db/schema';
 
 export const todoRouter = createTRPCRouter({
   create: protectedProcedure
@@ -14,6 +14,7 @@ export const todoRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(todos).values({
         title: input.name,
+        status: '未着手',
         createdById: ctx.session.user.id,
       });
     }),
@@ -42,11 +43,22 @@ export const todoRouter = createTRPCRouter({
   }),
 
   update: protectedProcedure
-    .input(z.object({ id: z.number(), completed: z.boolean() }))
+    .input(
+      z.object({
+        id: z.number(),
+        status: z.enum(todoStatusEnum.enumValues),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(todos)
-        .set({ completed: input.completed })
+        .set({ status: input.status })
         .where(eq(todos.id, input.id));
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(todos).where(eq(todos.id, input.id));
     }),
 });

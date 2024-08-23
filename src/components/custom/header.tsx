@@ -11,7 +11,6 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { getServerAuthSession } from '@/server/auth';
 
@@ -25,8 +24,8 @@ export async function Header() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  ホーム
+                <NavigationMenuLink className="text-xl font-bold">
+                  T3-todo
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -38,8 +37,6 @@ export async function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger>{session?.user?.name}</DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>プロフィール</DropdownMenuItem>
-                <DropdownMenuItem>設定</DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href="/api/auth/signout">ログアウト</Link>
                 </DropdownMenuItem>
