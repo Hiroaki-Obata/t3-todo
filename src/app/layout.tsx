@@ -1,11 +1,11 @@
 import '@/styles/globals.css';
 import { GeistSans } from 'geist/font/sans';
 import { type Metadata } from 'next';
-import { TRPCReactProvider } from '@/trpc/react';
 import dynamic from 'next/dynamic';
 
 import { Header } from '@/components/custom/header';
 import { Sidebar } from '@/components/custom/sidebar';
+import { TRPCReactProvider } from '@/trpc/react';
 
 export const metadata: Metadata = {
   title: 'T3 Todo',
