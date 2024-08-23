@@ -13,8 +13,8 @@ export function Sidebar() {
   return (
     <>
       {/* デスクトップのみ表示 */}
-      <div className="hidden md:flex">
-        <div className="pb-12 w-64">
+      <div className="hidden md:flex bg-slate-300">
+        <div className="pb-12 w-48">
           <ScrollArea className="h-full py-6 pl-8 pr-6">
             <nav className="flex flex-col space-y-2">
               {mockNavItems.map((item) => (

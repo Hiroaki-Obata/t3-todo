@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -6,7 +5,6 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +12,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { getServerAuthSession } from '@/server/auth';
 
-export function Header() {
+export async function Header() {
+  const session = await getServerAuthSession();
+
   return (
     <header className="bg-background border-b">
       <div className="container flex h-16 items-center justify-between">
@@ -28,31 +29,24 @@ export function Header() {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/posts" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  投稿一覧
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
         <div className="flex items-center space-x-4">
-          <Button>新規投稿</Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>プロフィール</DropdownMenuItem>
-              <DropdownMenuItem>設定</DropdownMenuItem>
-              <DropdownMenuItem>ログアウト</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>{session?.user?.name}</DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>プロフィール</DropdownMenuItem>
+                <DropdownMenuItem>設定</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/api/auth/signout">ログアウト</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link href="/api/auth/signin">ログイン</Link>
+          )}
         </div>
       </div>
     </header>
