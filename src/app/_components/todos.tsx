@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
   TableBody,
@@ -12,36 +13,33 @@ import {
 } from '@/components/ui/table';
 import { api } from '@/trpc/react';
 
-export function LatestPost() {
-  // 最新の投稿を取得
-  // データ取得中はローディング状態を表示
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
-
-  const [posts] = api.post.getAll.useSuspenseQuery();
+export function Todos() {
+  const [todos] = api.todo.getAll.useSuspenseQuery();
 
   // tRPCのユーティリティ関数を取得
   const utils = api.useUtils();
 
   const [name, setName] = useState('');
 
-  const createPost = api.post.create.useMutation({
+  const createTodo = api.todo.create.useMutation({
     onSuccess: async () => {
-      await utils.post.invalidate();
+      await utils.todo.invalidate();
       setName('');
+    },
+  });
+
+  const updateTodo = api.todo.update.useMutation({
+    onSuccess: async () => {
+      await utils.todo.invalidate();
     },
   });
 
   return (
     <div className="w-full">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createPost.mutate({ name });
+          createTodo.mutate({ name });
         }}
         className="flex flex-col gap-2"
       >
@@ -55,26 +53,35 @@ export function LatestPost() {
         <button
           type="submit"
           className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-          disabled={createPost.isPending}
+          disabled={createTodo.isPending}
         >
-          {createPost.isPending ? 'Submitting...' : 'Submit'}
+          {createTodo.isPending ? 'Submitting...' : 'Submit'}
         </button>
 
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>完了</TableHead>
               <TableHead>内容</TableHead>
               <TableHead>作成者</TableHead>
               <TableHead>作成日時</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {posts.map((post) => (
-              <TableRow key={post.id}>
-                <TableCell>{post.name}</TableCell>
-                <TableCell>{post.createdById.name}</TableCell>
+            {todos.map((todo) => (
+              <TableRow key={todo.id}>
                 <TableCell>
-                  {new Date(post.createdAt).toLocaleString('ja-JP')}
+                  <Checkbox
+                    checked={!!todo.completed}
+                    onCheckedChange={(checked: boolean) => {
+                      updateTodo.mutate({ id: todo.id, completed: checked });
+                    }}
+                  />
+                </TableCell>
+                <TableCell>{todo.title}</TableCell>
+                <TableCell>{todo.createdById.name}</TableCell>
+                <TableCell>
+                  {new Date(todo.createdAt).toLocaleString('ja-JP')}
                 </TableCell>
               </TableRow>
             ))}

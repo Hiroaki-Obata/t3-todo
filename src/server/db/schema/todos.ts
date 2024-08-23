@@ -5,15 +5,17 @@ import {
   serial,
   timestamp,
   varchar,
+  boolean,
 } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
 
-export const posts = pgTable(
-  'post',
+export const todos = pgTable(
+  'todo',
   {
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 256 }),
+    title: varchar('title', { length: 256 }),
+    completed: boolean('completed').default(false),
     createdById: varchar('created_by', { length: 255 })
       .notNull()
       .references(() => users.id),
@@ -26,13 +28,13 @@ export const posts = pgTable(
   },
   (example) => ({
     createdByIdIdx: index('created_by_idx').on(example.createdById),
-    nameIndex: index('name_idx').on(example.name),
+    titleIndex: index('title_idx').on(example.title),
   })
 );
 
-export const postsRelations = relations(posts, ({ one }) => ({
+export const todosRelations = relations(todos, ({ one }) => ({
   createdById: one(users, {
-    fields: [posts.createdById],
+    fields: [todos.createdById],
     references: [users.id],
   }),
 }));

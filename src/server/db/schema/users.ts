@@ -2,7 +2,7 @@ import { relations, sql } from 'drizzle-orm';
 import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 import { accounts } from './accounts';
-import { posts } from './posts';
+import { todos } from './todos';
 
 export const users = pgTable('user', {
   id: varchar('id', { length: 255 })
@@ -20,5 +20,5 @@ export const users = pgTable('user', {
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
-  posts: many(posts),
+  todos: many(todos),
 }));
