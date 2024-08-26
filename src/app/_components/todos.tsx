@@ -1,31 +1,18 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { todoStatusEnum } from '@/server/db/schema';
 import { api } from '@/trpc/react';
+
+import { TodoKanban } from './todoKanban';
+import { TodoTable } from './todoTable';
 
 export function Todos() {
   const utils = api.useUtils();
   const [todos, setTodos] = useState(() => utils.todo.getAll.getData() ?? []);
   const [name, setName] = useState('');
+  const [isKanban, setIsKanban] = useState(false);
 
   void api.todo.getAll.useSuspenseQuery();
 
@@ -70,6 +57,12 @@ export function Todos() {
 
   return (
     <div className="w-full flex flex-col gap-10">
+      <div className="w-full flex justify-end mb-4">
+        <Button onClick={() => setIsKanban(!isKanban)}>
+          {isKanban ? 'テーブル表示' : 'カンバン表示'}
+        </Button>
+      </div>
+
       {/* todo作成フォーム */}
       <form
         onSubmit={(e) => {
@@ -95,60 +88,15 @@ export function Todos() {
       </form>
 
       {/* todo一覧テーブル */}
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>完了</TableHead>
-            <TableHead>内容</TableHead>
-            <TableHead>作成者</TableHead>
-            <TableHead>作成日時</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {todos.map((todo) => (
-            <TableRow key={todo.id}>
-              <TableCell>
-                <Select
-                  value={todo.status}
-                  onValueChange={(value) => {
-                    updateTodo.mutate({
-                      id: todo.id,
-                      status:
-                        value as (typeof todoStatusEnum.enumValues)[number],
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {todoStatusEnum?.enumValues.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>{todo.title}</TableCell>
-              <TableCell>{todo.createdById.name}</TableCell>
-              <TableCell>
-                {new Date(todo.createdAt).toLocaleString('ja-JP')}
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => deleteTodo.mutate({ id: todo.id })}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {isKanban ? (
+        <TodoKanban todos={todos} deleteTodo={deleteTodo} />
+      ) : (
+        <TodoTable
+          todos={todos}
+          updateTodo={updateTodo}
+          deleteTodo={deleteTodo}
+        />
+      )}
     </div>
   );
 }
