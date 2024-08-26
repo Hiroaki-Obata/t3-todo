@@ -11,9 +11,9 @@ import {
 import { users } from './users';
 
 export const todoStatusEnum = pgEnum('status', [
+  '保留',
   '未着手',
   '進行中',
-  '保留',
   '完了',
 ]);
 

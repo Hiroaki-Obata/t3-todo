@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { api } from '@/trpc/react';
 
+import { TodoForm } from './todoForm';
 import { TodoKanban } from './todoKanban';
 import { TodoTable } from './todoTable';
 
@@ -64,33 +65,17 @@ export function Todos() {
       </div>
 
       {/* todo作成フォーム */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createTodo.mutate({ name });
-        }}
-        className="w-2/3 items-start flex gap-2"
-      >
-        <input
-          type="text"
-          placeholder="Todoを入力してください"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-2/3 rounded-md px-4 py-2 text-black border border-black"
-        />
-        <button
-          type="submit"
-          className="rounded-md bg-slate-500 text-white px-6 py-2"
-          disabled={createTodo.isPending}
-        >
-          {createTodo.isPending ? '作成中' : '作成'}
-        </button>
-      </form>
+      <TodoForm name={name} setName={setName} createTodo={createTodo} />
 
-      {/* todo一覧テーブル */}
       {isKanban ? (
-        <TodoKanban todos={todos} deleteTodo={deleteTodo} />
+        // todoカンバン
+        <TodoKanban
+          todos={todos}
+          updateTodo={updateTodo}
+          deleteTodo={deleteTodo}
+        />
       ) : (
+        // todoテーブル
         <TodoTable
           todos={todos}
           updateTodo={updateTodo}
