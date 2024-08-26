@@ -27,10 +27,16 @@ export function Todos() {
 
   const updateTodo = api.todo.update.useMutation({
     // 楽観的更新 stateを更新して表示上は即時反映してから、APIを叩く
-    onMutate: async ({ id, status }) => {
+    onMutate: async ({ id, title, status }) => {
       await utils.todo.getAll.cancel();
       const prevTodos = utils.todo.getAll.getData();
-      setTodos((old) => old.map((t) => (t.id === id ? { ...t, status } : t)));
+      setTodos((old) =>
+        old.map((t) =>
+          t.id === id
+            ? { ...t, title: title ?? t.title, status: status ?? t.status }
+            : t
+        )
+      );
       return { prevTodos };
     },
     onError: (err, newTodo, context) => {

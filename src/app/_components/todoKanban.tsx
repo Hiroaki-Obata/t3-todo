@@ -27,6 +27,8 @@ export function TodoKanban({ todos, updateTodo, deleteTodo }: TodoKanbanProps) {
     if (source.droppableId !== destination.droppableId) {
       updateTodo.mutate({
         id: parseInt(draggableId),
+        title:
+          todos.find((todo) => todo.id === parseInt(draggableId))?.title ?? '',
         status:
           destination.droppableId as (typeof todoStatusEnum.enumValues)[number],
       });
@@ -57,19 +59,23 @@ export function TodoKanban({ todos, updateTodo, deleteTodo }: TodoKanbanProps) {
                         {(provided) => (
                           <div
                             key={todo.id.toString()}
-                            className="bg-white p-2 rounded shadow"
+                            className="bg-white p-2 rounded shadow flex flex-col h-full"
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <p>{todo.title}</p>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => deleteTodo.mutate({ id: todo.id })}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <p className="flex-grow">{todo.title}</p>
+                            <div className="flex justify-end items-end">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  deleteTodo.mutate({ id: todo.id })
+                                }
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         )}
                       </Draggable>

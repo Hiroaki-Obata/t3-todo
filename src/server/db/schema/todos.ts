@@ -21,7 +21,7 @@ export const todos = pgTable(
   'todo',
   {
     id: serial('id').primaryKey(),
-    title: varchar('title', { length: 256 }),
+    title: varchar('title', { length: 256 }).notNull(),
     status: todoStatusEnum('status').notNull(),
     createdById: varchar('created_by', { length: 255 })
       .notNull()

@@ -46,13 +46,14 @@ export const todoRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
+        title: z.string().min(1),
         status: z.enum(todoStatusEnum.enumValues),
       })
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(todos)
-        .set({ status: input.status })
+        .set({ title: input.title, status: input.status })
         .where(eq(todos.id, input.id));
     }),
 
