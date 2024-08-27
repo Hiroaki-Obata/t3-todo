@@ -90,7 +90,7 @@ const TodoTableRow = ({ todo, updateTodo, deleteTodo }: TodoTableRowProps) => {
               statusColors[todo.status]
             )}
           >
-            <SelectValue />
+            <SelectValue>{todo.status}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {todoStatusEnum.enumValues.map((status) => (

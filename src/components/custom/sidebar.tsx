@@ -5,9 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const mockNavItems = [
   { href: '/', label: 'ホーム' },
-  { href: '/posts', label: '投稿一覧' },
-  { href: '/profile', label: 'プロフィール' },
-  { href: '/settings', label: '設定' },
+  { href: '/todos', label: 'Todoリスト' },
 ];
 
 export function Sidebar() {
