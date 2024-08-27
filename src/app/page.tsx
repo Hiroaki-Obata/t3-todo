@@ -1,15 +1,17 @@
-import { Todos } from '@/app/_components/todos';
-import { getServerAuthSession } from '@/server/auth';
-import { HydrateClient } from '@/trpc/server';
+import Link from 'next/link';
 
-export default async function Home() {
-  const session = await getServerAuthSession();
+import { Button } from '@/components/ui/button';
 
+export default function HomePage() {
   return (
-    <HydrateClient>
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        {session?.user ? <Todos /> : <div>ログインしてください</div>}
-      </div>
-    </HydrateClient>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8">ようこそ</h1>
+      <p className="text-xl mb-8">
+        このアプリケーションでは、Todoリストを管理することができます。
+      </p>
+      <Link href="/todos" passHref>
+        <Button className="text-lg">Todoリストを見る</Button>
+      </Link>
+    </div>
   );
 }
