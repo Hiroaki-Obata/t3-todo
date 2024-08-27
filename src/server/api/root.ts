@@ -1,3 +1,4 @@
+import { photosRouter } from '@/server/api/routers/photos';
 import { todoRouter } from '@/server/api/routers/todo';
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
  */
 export const appRouter = createTRPCRouter({
   todo: todoRouter,
+  photos: photosRouter,
 });
 
 // export type definition of API
