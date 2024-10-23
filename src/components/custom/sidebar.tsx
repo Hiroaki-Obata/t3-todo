@@ -7,6 +7,7 @@ const mockNavItems = [
   { href: '/', label: 'ホーム' },
   { href: '/todos', label: 'Todoリスト' },
   { href: '/photos', label: 'みてや' },
+  { href: '/football', label: 'プレミアリーグ' },
 ];
 
 export function Sidebar() {

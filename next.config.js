@@ -7,7 +7,7 @@ await import('./src/env.js');
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ['qapzmymxphsfwpzesyui.supabase.co'],
+    domains: ['qapzmymxphsfwpzesyui.supabase.co', 'crests.football-data.org'],
   },
 };
 
